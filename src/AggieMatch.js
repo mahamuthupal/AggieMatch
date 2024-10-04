@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
-import './App.css'
-import SingleCard from './components/SingleCard'
-import { supabase } from './supabaseClient'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { Box, Button, Heading, Text, SimpleGrid } from '@chakra-ui/react';
+import SingleCard from './components/SingleCard';
+import { supabase } from './supabaseClient';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const cardImages = [
     { "src": "/img/headshot1.png", matched: false },
@@ -194,11 +194,46 @@ function AggieMatch({ session }) {
 
   return (
     <div className="App">
-      <button onClick={() => navigate('/signin')}>Sign Out</button>
-      <h1>Aggie Match</h1>
-      <button onClick={shuffleCards}>New Game</button>
-
-      <div className="card-grid">
+      <h1 style={{ fontSize: '48px', fontWeight: 'bold', textAlign: 'center', marginBottom: '20px' }}>Aggie Match</h1>
+  
+      <Box display="flex" justifyContent="space-between" padding="2px">
+        <Box textAlign="left">
+          {bestScore !== null && <p>Best Score: {bestScore}</p>}
+          {bestTime !== null && <p>Best Time: {bestTime} seconds</p>}
+        </Box>
+        
+        <Box display="flex" gap="20px">
+          <button
+            style={{
+              background: '#ff7e5f',
+              color: 'white',
+              padding: '10px 10px',
+              border: 'none',
+              borderRadius: '5px',
+              width: '130px',
+            }}
+            onClick={shuffleCards}
+          >
+            New Game
+          </button>
+  
+          <button
+            style={{
+              background: '#feb47b',
+              color: 'white',
+              padding: '10px 10px',
+              border: 'none',
+              borderRadius: '5px',
+              width: '120px',
+            }}
+            onClick={() => navigate('/signin')}
+          >
+            Sign Out
+          </button>
+        </Box>
+      </Box>
+  
+      <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gridTemplateRows="repeat(3, 1fr)" gap={4} className="card-grid">
         {cards.map(card => (
           <SingleCard
             key={card.id}
@@ -208,14 +243,15 @@ function AggieMatch({ session }) {
             disabled={disabled}
           />
         ))}
-      </div>
-
-      <p>Turns: {turns}</p>
-      {bestScore !== null && <p>Best Score: {bestScore}</p>}
-      <p>Current Time: {currentTime} seconds</p>
-      {bestTime !== null && <p>Best Time: {bestTime} seconds</p>}
+      </Box>
+  
+      <Box display="flex" justifyContent="space-between" padding="10px">
+        <p>Current Time: {currentTime} seconds</p>
+        <p>Turns: {turns}</p>
+      </Box>
     </div>
   );
-}
+  
+}  
 
 export default AggieMatch

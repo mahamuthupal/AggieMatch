@@ -44,7 +44,6 @@ export default function Login() {
       return;
     }
 
-    alert('Login successful!');
     navigate('/aggie-match', { state: { username: username } });
     setLoading(false);
   };

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from './supabaseClient';
 import AggieMatch from './AggieMatch';
+import { Box } from '@chakra-ui/react';
 
 export default function Account({ session }) {
   const [loading, setLoading] = useState(true);
@@ -65,8 +66,8 @@ export default function Account({ session }) {
   }
 
   return (
-    <div>
-      <form onSubmit={updateProfile} className="form-widget">
+    <Box w='100%' h='100vh' bgGradient='linear(to-l, #7928CA, #FF0080)' padding={4} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+      <form onSubmit={updateProfile} className="form-widget" style={{ width: '100%', maxWidth: '400px' }}>
         <div>
           <label htmlFor="username">Username</label>
           <input
@@ -83,13 +84,14 @@ export default function Account({ session }) {
           </button>
         </div>
       </form>
-  
+
       <div>
         <button className="sign-out" onClick={() => supabase.auth.signOut()}>
           Sign Out
         </button>
         <AggieMatch session={session} />
       </div>
-    </div>
+    </Box>
   );
 }
+  
