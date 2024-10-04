@@ -3,6 +3,7 @@ import { Box, Button, Heading, Text, SimpleGrid } from '@chakra-ui/react';
 import SingleCard from './components/SingleCard';
 import { supabase } from './supabaseClient';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { FaTrophy } from "react-icons/fa";
 
 const cardImages = [
     { "src": "/img/headshot1.png", matched: false },
@@ -229,76 +230,117 @@ function AggieMatch({ session }) {
 
 
   return (
-    <div className="App">
-      <h1 style={{ fontSize: '48px', fontWeight: 'bold', textAlign: 'center', marginBottom: '20px' }}>Aggie Match</h1>
-  
-      <Box display="flex" justifyContent="space-between" padding="2px">
-        <Box textAlign="left">
-          {bestScore !== null && <p>Best Score: {bestScore}</p>}
-          {bestTime !== null && <p>Best Time: {bestTime} seconds</p>}
-        </Box>
-        
-        <Box display="flex" gap="20px">
-          <button
-            style={{
-              background: '#ff7e5f',
-              color: 'white',
-              padding: '10px 10px',
-              border: 'none',
-              borderRadius: '5px',
-              width: '130px',
-            }}
-            onClick={shuffleCards}
-          >
-            New Game
-          </button>
-  
-          <button
-            style={{
-              background: '#feb47b',
-              color: 'white',
-              padding: '10px 10px',
-              border: 'none',
-              borderRadius: '5px',
-              width: '120px',
-            }}
-            onClick={() => navigate('/signin')}
-          >
-            Sign Out
-          </button>
-        </Box>
-      </Box>
-  
-      <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gridTemplateRows="repeat(3, 1fr)" gap={4} className="card-grid">
-        {cards.map(card => (
-          <SingleCard
-            key={card.id}
-            card={card}
-            handleChoice={handleChoice}
-            flipped={card === choiceOne || card === choiceTwo || card.matched}
-            disabled={disabled}
-          />
-        ))}
-      </Box>
-  
-      <Box display="flex" justifyContent="space-between" padding="0px">
-        <p>Current Time: {currentTime} seconds</p>
-        <p>Turns: {turns}</p>
-      </Box>
+    <div className="App" style={{ backgroundColor: 'white', color: '#4B0082' }}>
+        <Text
+            bgGradient="linear(to-l, #63b3ed, #6B46C1)"
+            bgClip="text"
+            fontSize="6xl"
+            fontWeight="extrabold"
+            textAlign="center"
+            marginBottom="20px"
+            marginTop="-60px"
+        >
+            Aggie Match
+        </Text>
 
-      <Box padding="20px" textAlign="center">
-        <Heading as="h3" size="lg">Leaderboard</Heading>
-        {leaderboard.bestTimeUser && (
-          <Text>Best Time: {leaderboard.bestTimeUser} - {leaderboard.bestTimeValue} seconds</Text>
-        )}
-        {leaderboard.lowestMovesUser && (
-          <Text>Lowest Moves: {leaderboard.lowestMovesUser} - {leaderboard.lowestMovesValue} moves</Text>
-        )}
-      </Box>
+        <Box display="flex" justifyContent="space-between" padding="2px">
+          <Box textAlign="left">
+            <Text color="black">
+              <Text as="span" fontWeight="bold">Best Score:</Text> {bestScore !== null ? bestScore : ''} {bestScore !== null ? 'turns' : ''}
+            </Text>
+            <Text color="black">
+              <Text as="span" fontWeight="bold">Best Time:</Text> {bestTime !== null ? bestTime : ''} {bestTime !== null ? 'seconds' : ''}
+            </Text>
+          </Box>
+            
+            <Box display="flex" justifyContent="flex-end" gap="20px" flexGrow={1}>
+              <Box
+                  as='button'
+                  p={3}
+                  color='white'
+                  fontWeight='bold'
+                  borderRadius='md'
+                  border='0px'
+                  borderColor='white'
+                  bgGradient='linear(to-l, #63b3ed, #6B46C1)'
+                  _hover={{
+                      bgGradient: 'linear(to-l, #6B46C1, #63b3ed)',
+                  }}
+                  onClick={shuffleCards}
+              >
+                  New Game
+              </Box>
 
+              <Box
+                  as='button'
+                  p={3} 
+                  color='white'
+                  fontWeight='bold'
+                  borderRadius='md'
+                  border='0px'
+                  borderColor='white'
+                  bgGradient='linear(to-r, red.500, yellow.500)'
+                  _hover={{
+                      bgGradient: 'linear(to-r, yellow.500, red.500)',
+                  }}
+                  onClick={() => navigate('/signin')}
+              >
+                  Sign Out
+              </Box>
+          </Box>
+        </Box>
+
+        <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gridTemplateRows="repeat(3, 1fr)" gap={4} className="card-grid">
+            {cards.map(card => (
+                <SingleCard
+                    key={card.id}
+                    card={card}
+                    handleChoice={handleChoice}
+                    flipped={card === choiceOne || card === choiceTwo || card.matched}
+                    disabled={disabled}
+                    style={{ border: '1px solid #4B0082' }} 
+                />
+            ))}
+        </Box>
+
+        <Box display="flex" justifyContent="space-between" width="100%" padding="1" color="#4B0082" flexGrow={1}>
+        <Text color="black">
+            <Text as="span" fontWeight="bold">Current Time:</Text> {currentTime} seconds
+        </Text>
+        <Text color="black">
+            <Text as="span" fontWeight="bold">Turns:</Text> {turns}
+        </Text>
+        </Box>
+
+
+
+        <Box padding="20px" textAlign="center">
+        <Text
+            bgGradient="linear(to-r, red.500, yellow.500)"
+            bgClip="text"
+            fontSize="4xl" 
+            fontWeight="extrabold"
+            textAlign="center"
+            marginRight="1px"
+        >
+            Leaderboard
+        </Text>
+        <Box padding="20px" display="flex" justifyContent="space-between" alignItems="center" color="black" paddingX="200px">
+            {leaderboard.bestTimeUser && (
+                <Box>
+                    <Text fontWeight="bold" fontSize="lg">Best Time</Text> 
+                    <Text fontSize="lg">{leaderboard.bestTimeUser} - {leaderboard.bestTimeValue} seconds</Text> 
+                </Box>
+            )}
+            {leaderboard.lowestMovesUser && (
+                <Box>
+                    <Text fontWeight="bold" fontSize="lg">Lowest Moves</Text>
+                    <Text fontSize="lg">{leaderboard.lowestMovesUser} - {leaderboard.lowestMovesValue} moves</Text> 
+                </Box>
+            )}
+        </Box>
+        </Box>
     </div>
   );
-  
-}  
-
+}
 export default AggieMatch

@@ -37,7 +37,7 @@ export default function Auth() {
     }
 
     const { error } = await supabase.from('users').insert([
-      { username, password },
+      { username, password }, // Store hashed password in a real app
     ]);
 
     if (error) {
