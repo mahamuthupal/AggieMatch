@@ -27,7 +27,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Auth />} />
         <Route path="/signin" element={<Login />} />
-        <Route path="/aggie-match" element={session ? <Account key={session.user.id} session={session} /> : <Navigate to="/" replace />} />
+        <Route path="/aggie-match" element={<AggieMatch></AggieMatch>} /> 
       </Routes>
       </div>
     </Router>

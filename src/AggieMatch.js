@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import SingleCard from './components/SingleCard'
 import { supabase } from './supabaseClient'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const cardImages = [
     { "src": "/img/headshot1.png", matched: false},
@@ -13,12 +14,16 @@ const cardImages = [
 ]
 
 function AggieMatch({session}) {
+  const {state} = useLocation();
+  const {username} = state; // Read values passed on state
+
   const [cards, setCards] = useState([])
   const [turns, setTurns] = useState(0)
   const [bestScore, setBestScore] = useState(null)
   const [choiceOne, setChoiceOne] = useState(null)
   const [choiceTwo, setChoiceTwo] = useState(null)
   const [disabled, setDisabled] = useState(false)
+  const navigate = useNavigate()
 
   const shuffleCards = () => { 
     const shuffledCards = [...cardImages, ...cardImages]
@@ -66,6 +71,9 @@ function AggieMatch({session}) {
 
   useEffect(() =>{
     shuffleCards()
+    // alert(username)
+    console.log(username)
+    handleSaveScore(0)
   }, [])
 
   useEffect(() => {
@@ -75,17 +83,35 @@ function AggieMatch({session}) {
   const checkCompletion = async () => {
     if (cards.length > 0 && cards.every(card => card.matched)) {
       if (bestScore === null || turns < bestScore) {
+        alert("New high score, congrats!")
         setBestScore(turns)
         handleSaveScore(turns)
       }
     }
   }
 
+
   const handleSaveScore = async (score) => {
     try {
+      // First, find the user ID associated with the username
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('username', username) // Use the username to fetch the user ID
+        .single();
+  
+      if (userError) {
+        console.error('Error fetching user ID:', userError);
+        return;
+      }
+
+      alert(userData.id)
+  
+      // Insert the score using the fetched user ID
       const { data, error } = await supabase
-        .from('profiles')
-        .insert({ moves: score, user_id: session.user.id});
+      .from('users')
+      .update({ moves: score }) // Set the new score
+      .eq('id', userData.id); // Ensure we update the correct row by user ID
 
       if (error) {
         console.error('Error inserting data:', error);
@@ -100,6 +126,7 @@ function AggieMatch({session}) {
   return (
 
     <div className="App">
+     <button onClick={() => navigate('/signin')}>Sign Out</button>
       <h1>Aggie Match</h1>
       <button onClick={shuffleCards}>New Game</button>
       

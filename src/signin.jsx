@@ -36,7 +36,7 @@ export default function Login() {
 
     // Successful login
     alert('Login successful!');
-    navigate('/aggie-match'); // Redirect to home after successful login
+    navigate('/aggie-match', { state: { username: username } }); // Redirect to home after successful login, passing in who the user is
     setLoading(false);
   };
 
