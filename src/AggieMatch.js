@@ -26,6 +26,7 @@ function AggieMatch({ session }) {
   const [disabled, setDisabled] = useState(false);
   const [currentTime, setCurrentTime] = useState(0); 
   const [timerActive, setTimerActive] = useState(false);
+  const [leaderboard, setLeaderboard] = useState({ bestTimeUser: null, bestTimeValue: null, lowestMovesUser: null, lowestMovesValue: null });
   const navigate = useNavigate();
 
   const shuffleCards = () => {
@@ -192,6 +193,41 @@ function AggieMatch({ session }) {
     }
   };
 
+  const fetchLeaderboard = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('username, bestTime, moves')
+        .order('bestTime', { ascending: true })
+        .limit(1);
+  
+      if (error) throw error;
+  
+      if (data.length > 0) {
+        setLeaderboard(prev => ({ ...prev, bestTimeUser: data[0].username, bestTimeValue: data[0].bestTime }));
+      }
+  
+      const { data: lowestMovesData, error: movesError } = await supabase
+        .from('users')
+        .select('username, moves')
+        .order('moves', { ascending: true })
+        .limit(1);
+  
+      if (movesError) throw movesError;
+  
+      if (lowestMovesData.length > 0) {
+        setLeaderboard(prev => ({ ...prev, lowestMovesUser: lowestMovesData[0].username, lowestMovesValue: lowestMovesData[0].moves }));
+      }
+    } catch (error) {
+      console.error('Error fetching leaderboard data:', error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchLeaderboard();
+  }, []);
+
+
   return (
     <div className="App">
       <h1 style={{ fontSize: '48px', fontWeight: 'bold', textAlign: 'center', marginBottom: '20px' }}>Aggie Match</h1>
@@ -245,10 +281,21 @@ function AggieMatch({ session }) {
         ))}
       </Box>
   
-      <Box display="flex" justifyContent="space-between" padding="10px">
+      <Box display="flex" justifyContent="space-between" padding="0px">
         <p>Current Time: {currentTime} seconds</p>
         <p>Turns: {turns}</p>
       </Box>
+
+      <Box padding="20px" textAlign="center">
+        <Heading as="h3" size="lg">Leaderboard</Heading>
+        {leaderboard.bestTimeUser && (
+          <Text>Best Time: {leaderboard.bestTimeUser} - {leaderboard.bestTimeValue} seconds</Text>
+        )}
+        {leaderboard.lowestMovesUser && (
+          <Text>Lowest Moves: {leaderboard.lowestMovesUser} - {leaderboard.lowestMovesValue} moves</Text>
+        )}
+      </Box>
+
     </div>
   );
   
