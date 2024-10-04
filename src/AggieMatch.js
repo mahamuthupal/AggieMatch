@@ -15,17 +15,17 @@ const cardImages = [
 
 function AggieMatch({ session }) {
   const { state } = useLocation();
-  const { username } = state;
+  const { username } = state; 
 
   const [cards, setCards] = useState([]);
   const [turns, setTurns] = useState(0);
-  const [bestScore, setBestScore] = useState(null);
+  const [bestScore, setBestScore] = useState(null); 
+  const [bestTime, setBestTime] = useState(null); 
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
   const [disabled, setDisabled] = useState(false);
   const [currentTime, setCurrentTime] = useState(0); 
-  const [bestTime, setBestTime] = useState(null);
-  const [timerActive, setTimerActive] = useState(false); 
+  const [timerActive, setTimerActive] = useState(false);
   const navigate = useNavigate();
 
   const shuffleCards = () => {
@@ -38,12 +38,12 @@ function AggieMatch({ session }) {
     setCards(shuffledCards);
     setTurns(0);
     setCurrentTime(0); 
-    setTimerActive(false);
+    setTimerActive(false); 
   };
 
   const handleChoice = (card) => {
     if (!timerActive) {
-      setTimerActive(true); 
+      setTimerActive(true);
     }
     choiceOne ? setChoiceTwo(card) : setChoiceOne(card);
   };
@@ -88,9 +88,31 @@ function AggieMatch({ session }) {
     setDisabled(false);
   };
 
+  const fetchBestTimeAndScore = async () => {
+    try {
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('moves, bestTime')
+        .eq('username', username)
+        .single();
+
+      if (userError) {
+        console.error('Error fetching user data:', userError);
+        return;
+      }
+
+      if (userData) {
+        if (userData.moves !== null) setBestScore(userData.moves);
+        if (userData.bestTime !== null) setBestTime(userData.bestTime);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   useEffect(() => {
     shuffleCards();
-    handleSaveScore(0);
+    fetchBestTimeAndScore(); 
   }, []);
 
   useEffect(() => {
@@ -122,24 +144,27 @@ function AggieMatch({ session }) {
         .select('id')
         .eq('username', username)
         .single();
-
+  
       if (userError) {
         console.error('Error fetching user ID:', userError);
         return;
       }
-
+  
       const { data, error } = await supabase
         .from('users')
-        .update({ moves: score })
+        .update({ moves: score }) 
         .eq('id', userData.id);
-
+  
       if (error) {
-        console.error('Error inserting data:', error);
+        console.error('Error updating moves:', error);
+      } else {
+        console.log('Moves updated successfully:', data);
       }
     } catch (error) {
-      console.error('Error during insertion:', error);
+      console.error('Error during moves update:', error);
     }
   };
+  
 
   const handleSaveTime = async (time) => {
     try {
@@ -193,4 +218,4 @@ function AggieMatch({ session }) {
   );
 }
 
-export default AggieMatch;
+export default AggieMatch

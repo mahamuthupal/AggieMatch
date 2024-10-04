@@ -1,6 +1,18 @@
 import { useState } from 'react';
 import { supabase } from './supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import {
+  Flex,
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Button,
+  Heading,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react';
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
@@ -12,7 +24,6 @@ export default function Login() {
     event.preventDefault();
     setLoading(true);
 
-    // Fetch user based on username
     const { data, error } = await supabase
       .from('users')
       .select('*')
@@ -25,8 +36,7 @@ export default function Login() {
       return;
     }
 
-    // Check if the password matches
-    const isPasswordValid = password === data.password; // You should hash and compare hashed passwords in a real app
+    const isPasswordValid = password === data.password; 
 
     if (!isPasswordValid) {
       alert('Incorrect password!');
@@ -34,50 +44,71 @@ export default function Login() {
       return;
     }
 
-    // Successful login
     alert('Login successful!');
-    navigate('/aggie-match', { state: { username: username } }); // Redirect to home after successful login, passing in who the user is
+    navigate('/aggie-match', { state: { username: username } });
     setLoading(false);
   };
 
   return (
-    <div className="row flex flex-center">
-      <div className="col-6 form-widget">
-        <h1 className="header">Aggie Match Sign In</h1>
-        <form className="form-widget" onSubmit={handleSignIn}>
-          <div>
-            <input
-              className="inputField"
-              type="text"
-              placeholder="Your username"
-              value={username}
-              required
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              className="inputField"
-              type="password"
-              placeholder="Your password"
-              value={password}
-              required
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div>
-            <button className="button block" disabled={loading}>
-              {loading ? <span>Loading</span> : <span>Sign in</span>}
-            </button>
-          </div>
-        </form>
-        <p>
-          Don't have an account?{' '}
-          <button onClick={() => navigate('/signup')} className="link-button">
-            Sign up
-          </button>
-        </p>
-      </div>
-    </div>
+    <Flex
+      minH={'100vh'}
+      align={'center'}
+      justify={'center'}
+      bg={useColorModeValue('gray.50', 'gray.800')}
+    >
+      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+        <Stack align={'center'}>
+          <Heading fontSize={'4xl'}>Sign in to your account</Heading>
+        </Stack>
+        <Box
+          rounded={'lg'}
+          bg={useColorModeValue('white', 'gray.700')}
+          boxShadow={'lg'}
+          p={8}
+        >
+          <Stack spacing={4}>
+            <FormControl id="username">
+              <FormLabel>Username</FormLabel>
+              <Input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </FormControl>
+            <FormControl id="password">
+              <FormLabel>Password</FormLabel>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </FormControl>
+            <Stack spacing={10}>
+              <Button
+                bg={'blue.400'}
+                color={'white'}
+                _hover={{
+                  bg: 'blue.500',
+                }}
+                onClick={handleSignIn}
+                isLoading={loading}
+              >
+                Sign in
+              </Button>
+              <Text align={'center'}>
+                Don&apos;t have an account?{' '}
+                <Text
+                  as="a"
+                  color={'blue.400'}
+                  onClick={() => navigate('/signup')}
+                >
+                  Sign up
+                </Text>
+              </Text>
+            </Stack>
+          </Stack>
+        </Box>
+      </Stack>
+    </Flex>
   );
 }

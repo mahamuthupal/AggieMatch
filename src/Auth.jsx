@@ -1,6 +1,18 @@
 import { useState } from 'react';
 import { supabase } from './supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import {
+  Flex,
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Button,
+  Heading,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react';
 
 export default function Auth() {
   const [loading, setLoading] = useState(false);
@@ -12,8 +24,7 @@ export default function Auth() {
     event.preventDefault();
     setLoading(true);
 
-    // Check if username already exists
-    const { data: existingUser, error: fetchError } = await supabase
+    const { data: existingUser } = await supabase
       .from('users')
       .select('*')
       .eq('username', username)
@@ -25,58 +36,79 @@ export default function Auth() {
       return;
     }
 
-    // Insert new user
     const { error } = await supabase.from('users').insert([
-      { username, password }, // Store the password directly (hash it in a real app)
+      { username, password },
     ]);
 
     if (error) {
       alert(error.message);
     } else {
       alert('Account created successfully!');
-      navigate('/'); // Redirect to home after sign-up
+      navigate('/signin');
     }
     setLoading(false);
   };
 
   return (
-    <div className="row flex flex-center">
-      <div className="col-6 form-widget">
-        <h1 className="header">Aggie Match Sign Up</h1>
-        <form className="form-widget" onSubmit={handleSignUp}>
-          <div>
-            <input
-              className="inputField"
-              type="text"
-              placeholder="Your username"
-              value={username}
-              required
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              className="inputField"
-              type="password"
-              placeholder="Your password"
-              value={password}
-              required
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div>
-            <button className="button block" disabled={loading}>
-              {loading ? <span>Loading</span> : <span>Sign up</span>}
-            </button>
-          </div>
-        </form>
-        <p>
-          Already have an account?{' '}
-          <button onClick={() => navigate('/signin')} className="link-button">
-            Sign in
-          </button>
-        </p>
-      </div>
-    </div>
+    <Flex
+      minH={'100vh'}
+      align={'center'}
+      justify={'center'}
+      bg={useColorModeValue('gray.50', 'gray.800')}
+    >
+      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+        <Stack align={'center'}>
+          <Heading fontSize={'4xl'}>Sign up for an account</Heading>
+        </Stack>
+        <Box
+          rounded={'lg'}
+          bg={useColorModeValue('white', 'gray.700')}
+          boxShadow={'lg'}
+          p={8}
+        >
+          <Stack spacing={4}>
+            <FormControl id="username">
+              <FormLabel>Username</FormLabel>
+              <Input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </FormControl>
+            <FormControl id="password">
+              <FormLabel>Password</FormLabel>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </FormControl>
+            <Stack spacing={10}>
+              <Button
+                bg={'blue.400'}
+                color={'white'}
+                _hover={{
+                  bg: 'blue.500',
+                }}
+                onClick={handleSignUp}
+                isLoading={loading}
+              >
+                Sign up
+              </Button>
+              <Text align={'center'}>
+                Already have an account?{' '}
+                <Text
+                  as="a"
+                  color={'blue.400'}
+                  onClick={() => navigate('/signin')}
+                >
+                  Sign in
+                </Text>
+              </Text>
+            </Stack>
+          </Stack>
+        </Box>
+      </Stack>
+    </Flex>
   );
 }
