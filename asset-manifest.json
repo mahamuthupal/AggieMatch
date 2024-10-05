@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/AggieMatch/static/css/main.a0cc8427.css",
+    "main.js": "/AggieMatch/static/js/main.6a8829f2.js",
+    "static/js/952.3c645574.chunk.js": "/AggieMatch/static/js/952.3c645574.chunk.js",
+    "static/js/453.80fd215c.chunk.js": "/AggieMatch/static/js/453.80fd215c.chunk.js",
+    "index.html": "/AggieMatch/index.html",
+    "main.a0cc8427.css.map": "/AggieMatch/static/css/main.a0cc8427.css.map",
+    "main.6a8829f2.js.map": "/AggieMatch/static/js/main.6a8829f2.js.map",
+    "952.3c645574.chunk.js.map": "/AggieMatch/static/js/952.3c645574.chunk.js.map",
+    "453.80fd215c.chunk.js.map": "/AggieMatch/static/js/453.80fd215c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a0cc8427.css",
+    "static/js/main.6a8829f2.js"
+  ]
+}
