@@ -6,12 +6,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { FaTrophy } from "react-icons/fa";
 
 const cardImages = [
-    { "src": "/img/headshot1.png", matched: false },
-    { "src": "/img/headshot2.png", matched: false },
-    { "src": "/img/headshot3.png", matched: false },
-    { "src": "/img/headshot4.png", matched: false },
-    { "src": "/img/headshot5.png", matched: false },
-    { "src": "/img/headshot6.png", matched: false }
+    { "src": "/AggieMatch/img/headshot1.png", matched: false },
+    { "src": "/AggieMatch/img/headshot2.png", matched: false },
+    { "src": "/AggieMatch/img/headshot3.png", matched: false },
+    { "src": "/AggieMatch/img/headshot4.png", matched: false },
+    { "src": "/AggieMatch/img/headshot5.png", matched: false },
+    { "src": "/AggieMatch/img/headshot6.png", matched: false }
 ]
 
 function AggieMatch({ session }) {

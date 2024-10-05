@@ -26,7 +26,7 @@ function App() {
       <Router>
         <Box className="container" padding="50px 0 100px 0">
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/AggieMatch" element={<Login />} />
             <Route path="/signup" element={<Auth />} />
             <Route path="/signin" element={<Login />} />
             <Route path="/aggie-match" element={<AggieMatch />} />

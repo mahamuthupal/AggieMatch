@@ -30,7 +30,7 @@ export default function Auth() {
       .eq('username', username)
       .single();
 
-    if (existingUser) {
+    if (existingUser || username === "") {
       alert('Username already exists!');
       setLoading(false);
       return;
@@ -44,7 +44,7 @@ export default function Auth() {
       alert(error.message);
     } else {
       alert('Account created successfully!');
-      navigate('/signin');
+      navigate('/aggie-match', { state: { username: username } });
     }
     setLoading(false);
   };
